@@ -2,7 +2,7 @@ import "../index.css"
 import { cloudaryImage } from "../Utils/constant";
 
 function ResTaurantContainer({ resData }) {
-    console.log("sejal", resData);
+
     // const { cloudinaryImageId, name, cuisines, avgRating, costForTwo, deliveryTime } = resData?.card?.card.gridElements?.infoWithStyle?.restaurants
     return (
         <div className="res-card" >
@@ -10,15 +10,17 @@ function ResTaurantContainer({ resData }) {
                 className="res-logo"
                 src={
                     cloudaryImage +
-                    (resData?.data?.cloudinaryImageId || "")
+                    (resData?.info?.cloudinaryImageId || "")
                 }
             />
 
-            <h3>{resData?.data?.name}</h3>
-            <h4>{resData?.data?.cuisines.join(",")}</h4>
-            <h4>{resData?.data?.avgRating}</h4>
-            <h4>{resData?.data?.costForTwo}</h4>
-            <h4>{resData?.data?.deliveryTime} Minutes</h4>
+            <h3>{resData?.info?.name}</h3>
+            {/* {console.log("sejalll", resData?.data?.name)} */}
+
+            <h4>{resData?.info?.cuisines.join(",")}</h4>
+            <h4>{resData?.info?.avgRating}</h4>
+            <h4>{resData?.info?.costForTwo}</h4>
+            <h4>{resData?.info?.sla?.deliveryTime} Minutes</h4>
 
             {/* <img
                 className="res-logo"

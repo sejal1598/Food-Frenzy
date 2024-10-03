@@ -1,139 +1,71 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "../index.css"
 import { resObj } from "../Utils/constant"
 import ResTaurantContainer from "./ResTaurantContainer"
-
+import { useQuery } from "@tanstack/react-query"
+import Loader from "./Loader"
+import { Link } from "react-router-dom"
 function Body() {
-    const [listOfRestaurant, setListOfRestaurant] = useState([{
-        data: {
+    const [listOfRestaurant, setListOfRestaurant] = useState([])
+    const [searchText, setSearchText] = useState("")
+    const [filterValue, setFilterValue] = useState([])
 
-            "id": "73611",
-            "name": "NIC Ice Creams",
-            "cloudinaryImageId": "18d8b8fb6bac8063a6fa886e20148110",
-
-            "costForTwo": "₹120 for two",
-            "cuisines": [
-                "Ice Cream",
-                "Desserts"
-            ],
-            "avgRating": 4.8,
-            "avgRatingString": "4.6",
-            "totalRatingsString": "10K+",
-            "deliveryTime": 29,
-
-        }
-    },
-    {
-        data: {
-
-            "id": "73612",
-            "name": "PizzaHut",
-            "cloudinaryImageId": "18d8b8fb6bac8063a6fa886e20148110",
-
-            "costForTwo": "₹120 for two",
-            "cuisines": [
-                "Ice Cream",
-                "Desserts"
-            ],
-            "avgRating": 4.7,
-            "avgRatingString": "4.6",
-            "totalRatingsString": "10K+",
-            "deliveryTime": 29,
-        }
-    },
-    {
-        data: {
-
-            "id": "73621",
-            "name": "Dominos",
-            "cloudinaryImageId": "18d8b8fb6bac8063a6fa886e20148110",
-
-            "costForTwo": "₹120 for two",
-            "cuisines": [
-                "Ice Cream",
-                "Desserts"
-            ],
-            "avgRating": 4.6,
-            "avgRatingString": "4.6",
-            "totalRatingsString": "10K+",
-            "deliveryTime": 29,
-
-        }
-    },
-    ])
-    // const listOfRestaurant = [{
-    //     data: {
-
-    //         "id": "73611",
-    //         "name": "NIC Ice Creams",
-    //         "cloudinaryImageId": "18d8b8fb6bac8063a6fa886e20148110",
-
-    //         "costForTwo": "₹120 for two",
-    //         "cuisines": [
-    //             "Ice Cream",
-    //             "Desserts"
-    //         ],
-    //         "avgRating": 4.8,
-    //         "avgRatingString": "4.6",
-    //         "totalRatingsString": "10K+",
-    //         "deliveryTime": 29,
-
-    //     }
-    // },
-    // {
-    //     data: {
-
-    //         "id": "73612",
-    //         "name": "PizzaHut",
-    //         "cloudinaryImageId": "18d8b8fb6bac8063a6fa886e20148110",
-
-    //         "costForTwo": "₹120 for two",
-    //         "cuisines": [
-    //             "Ice Cream",
-    //             "Desserts"
-    //         ],
-    //         "avgRating": 4.7,
-    //         "avgRatingString": "4.6",
-    //         "totalRatingsString": "10K+",
-    //         "deliveryTime": 29,
-    //     }
-    // },
-    // {
-    //     data: {
-
-    //         "id": "73621",
-    //         "name": "Dominos",
-    //         "cloudinaryImageId": "18d8b8fb6bac8063a6fa886e20148110",
-
-    //         "costForTwo": "₹120 for two",
-    //         "cuisines": [
-    //             "Ice Cream",
-    //             "Desserts"
-    //         ],
-    //         "avgRating": 4.6,
-    //         "avgRatingString": "4.6",
-    //         "totalRatingsString": "10K+",
-    //         "deliveryTime": 29,
-
-    //     }
-    // },
-    // ]
     const handleTopRated = () => {
-        let filteredRestaurant = listOfRestaurant?.filter(restfiter => restfiter?.data?.avgRating > 4.6)
+        let filteredRestaurant = listOfRestaurant?.filter(restfiter => restfiter?.info?.avgRating > 4.2)
         setListOfRestaurant(filteredRestaurant)
         console.log("restaurantFilter", restaurantFilter);
     }
 
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9352403&lng=77.624532&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING")
+        const json = await data.json()
+        // return json;
+
+        setListOfRestaurant(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants)
+        setFilterValue(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants)
+    }
+
+    // const { data, isLoading, error } = useQuery({
+    //     queryKey: ["restaurant"],
+    //     queryFn: fetchData,
+    //     onSuccess: (data) => {
+    //         console.log("Fetched data:", data);
+    //         //   setListOfRestaurant(data?.data?.cards || []); // Assuming this is the path to the restaurant list
+    //     },
+    // });
+
+
+
+    const handlesearch = () => {
+        const filteredRestaurant = listOfRestaurant?.filter((res) => res?.info.name?.toLowerCase().includes(searchText))
+
+        console.log("filteredRestaurant", filteredRestaurant);
+        setFilterValue(filteredRestaurant)
+    }
+    console.log("ffffffffff", filterValue);
+
+
+    if (listOfRestaurant?.length === 0) {
+        return <Loader />
+    }
+    console.log("ffffffff0", searchText);
 
     return (
         <div className="body">
-            {/* <div className="search">Search</div> */}
+
             <div className="filter">
+
+                <input className="input-search" type="text" value={searchText} onChange={((e) => setSearchText(e.target.value))} />
+                <button className="search-btn" onClick={handlesearch}>Search</button>
                 <button className="filter-btn" onClick={handleTopRated}> Top Rated Restaurant </button>
             </div>
             <div className="res-container">
-                {listOfRestaurant.map((restaurant) => <ResTaurantContainer resData={restaurant} />)}
-
+                {filterValue?.map((restaurant) => <Link to={"/restaurantMenu" + "/" + restaurant?.info?.id}><ResTaurantContainer resData={restaurant} /></Link>)}
+                {/* {console.log("restaurant", restaurant)} */}
                 {/* {resObj.map(restaurant => <ResTaurantContainer resData={restaurant} />)} */}
             </div>
 

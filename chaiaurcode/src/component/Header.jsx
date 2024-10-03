@@ -1,7 +1,18 @@
 // import logo from "./assets/download.png"
 // import "../src/index.css"
+import { useEffect, useState } from "react"
 import logo from "../assets/download.png"
+import { Link } from "react-router-dom";
 function Header() {
+    const [btnLogin, setBtnLogin] = useState("Login")
+
+    useEffect(() => {
+        console.log("ggg");
+
+    }, [btnLogin])
+    const handleLogin = () => {
+        btnLogin === "Login" ? setBtnLogin("Logout") : setBtnLogin("Login")
+    }
     return (
         <div className="header">
             <div className='logo-container'>
@@ -10,11 +21,13 @@ function Header() {
             </div>
             <div className="nav-items">
                 <ul>
-                    <li>Home</li>
-                    <li>About Us</li>
-                    <li>Contact Us</li>
+                    <li><Link to="/home">Home</Link></li>
+                    <li><Link to="/about">About Us</Link></li>
+                    <li><Link to="/contact">Contact Us</Link></li>
                     <li>Cart</li>
+                    <button className="login" onClick={handleLogin}>{btnLogin}</button>
                 </ul>
+
             </div>
         </div>
     )

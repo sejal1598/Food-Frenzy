@@ -47,12 +47,29 @@
 
 .res-logo {
     width: 100%;
-
     height: 150px;
 
 }
 
-.fiter {
-    padding: 2px;
-    text-align: center;
+.filter {
+
+    display: flex;
+}
+
+.login {
+    margin: 22px;
+    cursor: pointer;
+}
+
+.filter-btn {
+    margin: 10px;
+}
+
+.search-btn {
+    margin: 5px;
+}
+
+.input-search {
+    margin: 5px;
+    width: 190px;
 }
