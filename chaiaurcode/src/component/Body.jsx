@@ -5,15 +5,17 @@ import ResTaurantContainer from "./ResTaurantContainer"
 import { useQuery } from "@tanstack/react-query"
 import Loader from "./Loader"
 import { Link } from "react-router-dom"
+import useOnlineStatus from "../Hook/useOnlineStatus"
 function Body() {
     const [listOfRestaurant, setListOfRestaurant] = useState([])
     const [searchText, setSearchText] = useState("")
     const [filterValue, setFilterValue] = useState([])
-
+    const onlineStatus = useOnlineStatus()
     const handleTopRated = () => {
         let filteredRestaurant = listOfRestaurant?.filter(restfiter => restfiter?.info?.avgRating > 4.2)
         setListOfRestaurant(filteredRestaurant)
-        console.log("restaurantFilter", restaurantFilter);
+
+        console.log("filteredRestaurant", filteredRestaurant);
     }
 
     useEffect(() => {
@@ -53,7 +55,9 @@ function Body() {
         return <Loader />
     }
     console.log("ffffffff0", searchText);
+    // const onlineStatus = useOnlineStatus()
 
+    if (onlineStatus === false) return <p>Looks like yor internet connection went wrong</p>
     return (
         <div className="body">
 
